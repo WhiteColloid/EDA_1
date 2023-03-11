@@ -1,0 +1,31 @@
+---
+title: "R Notebook"
+output: html_document
+---
+
+
+```{r}
+
+```
+
+```{r}
+plot(cars)
+```
+
+### Q1.Reading the data into R in a tabular format, identifying, subsetting, and renaming the variables for your use
+
+```{r}
+
+raw = read.csv('raw_data.csv')
+summary(raw)
+
+
+```
+
+### Q2. Forming the core data frame that you'll be working from by reshaping and summarizing the data, storing new data frames in memory where appropriate
+
+```{r}
+clean = read.csv('Cleaned Data 2.csv')
+summary(clean)
+
+```
