@@ -3,24 +3,31 @@ title: "R Notebook"
 output: html_document
 ---
 
-
 ```{r}
+#Install the packages
 
-```
+library(tidyverse)
 
-```{r}
-plot(cars)
 ```
 
 ### Q1.Reading the data into R in a tabular format, identifying, subsetting, and renaming the variables for your use
 
 ```{r}
-
 raw = read.csv('raw_data.csv')
-summary(raw)
+```
 
+```{r}
+#Remove rows with NA critic scores
+data = raw %>% drop_na(Critic_Score)
+head(data)
+
+#Remove games with small number of critic count?
 
 ```
+
+#### Identifying name and unit of variables:
+
+xx_Sales are in millions.
 
 ### Q2. Forming the core data frame that you'll be working from by reshaping and summarizing the data, storing new data frames in memory where appropriate
 
@@ -31,4 +38,16 @@ summary(clean)
 
 #NEW LINE!
 #The other New line!
+```
+
+###Q3. Cleaning the data according to your purpose for the dataset
+
+```{r}
+
+```
+
+###Q4. Plotting distributions of your data
+
+```{r}
+
 ```
