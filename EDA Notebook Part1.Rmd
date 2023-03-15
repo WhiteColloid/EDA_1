@@ -1,6 +1,9 @@
 ---
 title: "R Notebook"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r}
@@ -10,77 +13,95 @@ library(tidyverse)
 
 ```
 
-###Q1.Reading the data into R in a tabular format, identifying, subsetting, and renaming the variables for your use
+###Q1.Reading the data into R in a tabular format, identifying,
+subsetting, and renaming the variables for your use
 
 ```{r}
-raw = read.csv('raw_data.csv')
+raw = read.csv('raw_data.csv') #Remove rows with NA critic scores
+data = raw %>% drop_na(Critic_Score)
+#head(data)
+
 ```
 
 ```{r}
-#Remove rows with NA critic scores
-data = raw %>% drop_na(Critic_Score)
-head(data)
+#Subsetting the features of the game (independent variable)
+#Four variables we consider important:
+x1 <- c("Platform", "Year_of_Release", "Genre", "Publisher")
+x_imp <- data[x1]
+head(x_imp)
+```
 
-#Remove games with small number of critic count?
+```{r}
+#Separate games based on critic scores into three levels: low, medium, high
+min(data["Critic_Score"])
+max(data["Critic_Score"])
+(98-13)/3
+
+low_score <- data %>% filter(Critic_Score <= 41.3)
+med_score <- data %>% filter(between(Critic_Score, 42, 70))
+high_score <- data %>% filter(Critic_Score >= 71)
 
 ```
 
 #### Identifying name and unit of variables:
 
+We don't need to rename the variabales, because the original dataset
+from kaggle is well-formatted, and we only need to explain some
+variables.
+
+NA_Sales: EU_Sales: JP_Sales: Other_Scales: Critic_Score: User_Score:
+Rating:
+
 xx_Sales are in millions.
 
-###Q2. Forming the core data frame that you'll be working from by reshaping and summarizing the data, storing new data frames in memory where appropriate
+### Q2. Forming the core data frame that you'll be working from by reshaping and summarizing the data, storing new data frames in memory where appropriate
 
 ```{r}
-clean = read.csv('Cleaned Data 2.csv')
-summary(clean)
-
-
-#NEW LINE!
-#The other New line!
+#Data frame that specifies on USER's opinion on the games (Might be useful)
+user_data <- data %>% drop_na(User_Count)
 ```
 
-###Q3. Cleaning the data according to your purpose for the dataset
-
 ```{r}
+#Summarize important variables
+df1 <- data %>% group_by(Platform) %>% summarise(n = n(), mean_score = mean(Critic_Score)) %>% arrange(desc(mean_score))
+df1
 
+df2 <- data %>% group_by(Genre) %>% summarise(n = n(), mean_score = mean(Critic_Score)) %>% arrange(desc(mean_score))
+df2
 
+df3 <- data %>% group_by(Publisher) %>% summarise(n = n(), mean_score = mean(Critic_Score)) %>% arrange(desc(n))
+df3
 
 ```
+We can see that in df3, there are too many publishers, and some of them only published few games but have high scores. 
 
-###Q4. Plotting distributions of your data
+
+
+### Q3. Cleaning the data according to your purpose for the dataset
 
 ```{r}
-
-
+#First purpose: See which factors lead to high critic score.
+#Maybe we can clean df3?
 
 ```
-
-
-###Q5. Calculating basic statistical metrics like central tendency measures
-
-```{r}
+This step in down in previous two questions.
 
 
 
-```
-
-
-
-###Q6. Some light correlational analysis/visualization of key variables.
+### Q4. Plotting distributions of your data
 
 ```{r}
+library(ggplot2)
+p <- ggplot(data, aes(x=Genre, y=Critic_Score)) + geom_boxplot() 
+p
 
+df3 <- data[, c('Year_of_Release', 'Critic_Score')] %>% drop_na(Year_of_Release)
+df4 <- df3 %>% group_by(Year_of_Release) %>% summarise(mean_score = mean(Critic_Score)) %>% arrange(Year_of_Release) 
+df4 <- slice(df4, 1:(n() - 1)) #Remove the last NA row(I can't delete it by drop_na)
+df4$Year_of_Release <- as.numeric(as.character(df4$Year_of_Release))
 
-
-```
-
-
-###Q7. A look forward to what further questions the analysis suggests and what it enables
-
-```{r}
-
-
+q2 <- ggplot(data=df4, aes(x=Year_of_Release, y=mean_score)) + geom_path()+ geom_point()
+q2 + theme(axis.text.x = element_text(angle =90, vjust = 0.5, hjust=1))
 
 ```
 
@@ -95,12 +116,29 @@ summary(clean)
 
 
 
+### Q5. Calculating basic statistical metrics like central tendency
+
+measures
+
+```{r}
 
 
 
+```
+
+### Q6. Some light correlational analysis/visualization of key variables.
+
+```{r}
 
 
 
+```
+
+###Q7. A look forward to what further questions the analysis suggests
+and what it enables
+
+```{r}
 
 
 
+```
