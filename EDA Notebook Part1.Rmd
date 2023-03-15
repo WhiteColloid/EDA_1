@@ -98,10 +98,10 @@ p
 df3 <- data[, c('Year_of_Release', 'Critic_Score')] %>% drop_na(Year_of_Release)
 df4 <- df3 %>% group_by(Year_of_Release) %>% summarise(mean_score = mean(Critic_Score)) %>% arrange(Year_of_Release) 
 df4 <- slice(df4, 1:(n() - 1)) #Remove the last NA row(I can't delete it by drop_na)
-df4$Year_of_Release <- as.numeric(as.character(df4$Year_of_Release))
+df4$Year_of_Release <- df4$Year_of_Release
 
 q2 <- ggplot(data=df4, aes(x=Year_of_Release, y=mean_score)) + geom_path()+ geom_point()
-q2 + theme(axis.text.x = element_text(angle =90, vjust = 0.5, hjust=1))
+q2 + theme(axis.text.x = element_text(angle =90, vjust = 0.5, hjust=1)) 
 
 ```
 
