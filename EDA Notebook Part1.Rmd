@@ -27,7 +27,7 @@ head(data)
 ```{r}
 #Subsetting the features of the game (independent variable)
 #Four variables we consider important:
-x1 <- c("Name", "Platform", "Year_of_Release", "Genre", "Publisher")
+x1 <- c("Name", "Platform", "Year_of_Release", "Genre", "Publisher", "Global_Sales")
 x_imp <- data[x1]
 head(x_imp)
 ```
@@ -100,41 +100,109 @@ q2 + theme(axis.text.x = element_text(angle =90, vjust = 0.5, hjust=1))
 
 ### Q5. Calculating basic statistical metrics like central tendency measures
 
-To calculate the central tendency measures, we can use the 'summary()' function in R. 
+Central tendency refers to the value around which the data tends to cluster. The most common measures of central tendency are mean, median, and mode. Mean is the arithmetic average of the data, median is the middle value when the data is arranged in ascending or descending order, and mode is the value that appears most frequently in the data. These measures help to understand the distribution of the data and can be used to make comparisons between different groups or variables in the dataset.
+
+In order to calculate these measures in R, we can use various built-in functions. One thing to notice is that, since mode is not always well-defined and can be less informative compared to the other two measures, it is not used as frequently.
+
+Another important measure of central tendency is the range of the data, which is simply the difference between the maximum and minimum values of the variable. This measure helps to understand the spread of the data and can be used to identify outliers in the dataset.
+
+Following code will walk through the process of calculating the measures.
+
+#Summary
+One easy way to calculate the central tendency measures, we can use the 'summary()' function in R. 
 ```{r}
 # use Critic_score as an example
 summary(data$Critic_Score)
 ```
-Then if we want to calculate the central tendency measures for different subsets of the data we metioned in previous question, we can use the 'group_by()' and 'summarise()' functions from the dplyr package. 
+The 'summary()' method will output the min, 1st quartile, median, mean, 3rd quartile, and max of the input variable
+
+#Mean
+To calculate the mean for a variable, we can use the mean() function in R.
 ```{r}
+# Calculate the mean of the Global_Sales variable
+mean_sales <- mean(data$Global_Sales)
+
+# Print the result
+cat("The mean of Global_Sales is:", mean_sales)
+```
+
+Then if we want to calculate the mean 'Critic_Score' for different subsets of the data we mentioned in previous question, we can use the 'group_by()' and 'summarise()' functions from the dplyr package. 
+```{r}
+# Load the dplyr package
 library(dplyr)
 
+# Take the 'data' dataframe and group it by the 'Genre' variable using the pipe operator
 data %>% 
   group_by(Genre) %>% 
+  # Calculate the mean of the 'Critic_Score' variable for each group of 'Genre'
   summarise(mean_Critic_Score = mean(Critic_Score))
+```
+This code will create a new dataframe with two columns: 'Genre' and 'mean_Critic_Score'.
+#Median
+To calculate the median for a variable, we can use the median() function in R.
+```{r}
+# Calculate the median of the Global_Sales variable
+median_sales <- median(data$Global_Sales)
 
+# Print the result
+cat("The median of Global_Sales is:", median_sales)
+```
+
+#Mode
+To calculate the mode for a variable is different from the steps before since there is no built-in function to do this. However, we can write our own function to calculate the mode:
+```{r}
+# Define a function to calculate the mode
+get_mode <- function(x) {
+  uniqx <- unique(x)
+  uniqx[which.max(tabulate(match(x, uniqx)))]
+}
+
+# Calculate the mode of the Platform variable
+mode_platform <- get_mode(data$Platform)
+
+# Print the result
+cat("The mode of Platform is:", mode_platform)
 ```
 
 ### Q6. Some light correlational analysis/visualization of key variables.
 
-To perform correlational analysis between two variables, we will use 'cor()'. Because it is possible for the variables to contain different type and na values, we use 'pairwise.complete.obs' argument to only use complete observations in the calculation of the correlation coefficient
+#Correlational Analysis
+Correlation analysis is a technique used to examine the relationship between two variables in a dataset. Correlation coefficients measure the strength and direction of the relationship between two variables. The most commonly used correlation coefficient is the Pearson correlation coefficient, which measures the linear relationship between two variables. It ranges from -1 to 1, where -1 indicates a perfect negative correlation, 0 indicates no correlation, and 1 indicates a perfect positive correlation.
+
+To calculate the Pearson correlation coefficient in R, we can use the 'cor()' function.It takes two variables as input and returns the correlation coefficient.
+
+Because it is possible for the variables to contain different type and na values, we use 'pairwise.complete.obs' argument to only use complete observations in the calculation of the correlation coefficient
 ```{r}
 #Take Critic score and Genre as an example
 data$User_Score <- as.numeric(data$User_Score)
 cor_result <- cor(data$Critic_Score, data$User_Score, use = "pairwise.complete.obs")
 cor_result
 ```
-To visualize the correlation between two variables, we will plot the scatterplot for the two variables.
 
-This will create a scatter plot with Critic_Score on the x-axis and User_Score on the y-axis. 
+#Visualization
+We can also visualize the relationship between two variables using a scatterplot. Scatterplots help to visualize the nature of the relationship between two variables. If the points on the scatterplot form a linear pattern, then we can assume a linear relationship between the variables.
+
+This code will create a scatter plot with Critic_Score on the x-axis and User_Score on the y-axis. 
 ```{r}
+library(ggplot2)
+
+# Create a scatter plot
 ggplot(data, aes(x = Critic_Score, y = User_Score)) +
-  geom_point()
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE) +
   labs(x = "Critic Score", y = "User Score") +
   theme_bw()
+
 ```
+The output is a scatter plot that shows the relationship between critic scores and user scores. We can see that there is a positive correlation between these two variables, which means as critic scores increase, user scores also tend to increase.
 
 ###Q7. A look forward to what further questions the analysis suggests and what it enables
+
+Data analysis is an iterative process that involves constantly asking new questions and refining our understanding of the data. Once we have explored the data and identified some initial insights, we can start to ask more specific questions that help us understand the data in greater detail.
+
+The code we have covered so far aims to shed light on the factors that play a role in determining the success of a video game. Initially, we subset the variables(including genre, platform, publisher, and release year) and sales to explore the relationship. We then utilized regression analysis to create a model that reflects the relationship between these variables. Moving forward, we can investigate which variables have the most significant impact on sales. By doing so, we can gain further insight into what factors contribute the most to a video game's success.
+
+Furthermore, we used clustering techniques to identify groups(low score, middle score, high score) of similar games based on their attributes, so we can use this to identify patterns in the data and understand the characteristics of successful games in each group in future analysis.
 
 Based on the current analysis, some further questions that could be explored include:
 
@@ -150,4 +218,5 @@ We can possibly use visualization such as line graph to explore this question.
 By making analysis to these questions, we will be able to make some preliminary conclusions about the data. If there are many highly rated games in the early years, such as 2010, we can infer that the high rating is not solely based on hardware advancement or graphics, but also on the gameplay.
 
 Furthermore, if we know that a platform contains a lot of game in the high rating games group, then we can infer that this platform must have good productivity, which can provide recommendation to consumers to buy this platform's game
+
 
