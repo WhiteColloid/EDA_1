@@ -1,0 +1,60 @@
+---
+title: "Data Descriptor"
+output: pdf_document
+date: "2023-03-17"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tinytex::install_tinytex(force = TRUE)
+```
+
+#### Requirements:
+Must-haves 
+
+Adapts elements from the article-length data descriptor genre where appropriate, including an abstract
+
+Describes how the dataset was originally collected by citing and representing any documentation or accompanying materials, including:  
+
+any ethical considerations related to its collection or use 
+
+any limitations of the dataset 
+
+any dataset merging considerations 
+
+Briefly reviews literature to account for what other work scholars have done with this dataset and others like it 
+
+Motivates author’s transformation and analysis of the data in relation to that 
+
+Describes how data were prepared and transformed into a new form in an appropriate level of detail 
+
+Picks a subset of variables to focus on, explaining why and how 
+
+Includes any tools, tests, technique, and exclusion decisions, but not procedurally step-by-step 
+
+Presents variables and key summary findings, including central tendency and any correlation measures 
+
+Includes selected figures to describe the data’s distribution and notable features 
+
+Includes a summary table 
+
+Looks forward to possibilities for analysis 
+
+Nice-to-haves 
+
+Communicates this new form of the data’s applicability and significance 
+
+Appendices with any data or figures that don’t make the report but authors want to showcase 
+
+#### Guidelines
+Your report should accomplish the following:
+- Describe how the data were collected
+- Describe the data, including the source and scope
+- Review the literature that explores what other work scholars have done with this data. 
+- Attend to any ethical considerations related to its collection or use
+- Describe how you cleaned the data
+- Address any dataset merging considerations
+- Describe central tendency and any correlation measures of your data set
+- Include necessary figures (e.g., tables, histograms, maps, charts) describing the distribution of the data
+
+
