@@ -8,53 +8,97 @@ date: "2023-03-17"
 knitr::opts_chunk$set(echo = TRUE)
 tinytex::install_tinytex(force = TRUE)
 ```
+```{r, echo=FALSE}
+library(tidyverse)
+raw = read.csv('/Users/harrychen/Downloads/raw_data.csv') #Remove rows with NA critic scores
+data = raw %>% drop_na(Critic_Score, User_Score)
+```
 
-#### Requirements:
-Must-haves 
+#### Abstract
 
-Adapts elements from the article-length data descriptor genre where appropriate, including an abstract
 
-Describes how the dataset was originally collected by citing and representing any documentation or accompanying materials, including:  
+#### Introduction
 
-any ethical considerations related to its collection or use 
 
-any limitations of the dataset 
+#### Methods
+### Data Cleaning
+Before starting the analysis, we cleaned the data to ensure that the format of our data is consistent and accurate across different method. The cleaning process included the following steps: Handling missing values, formatting the data, and annotating columns.
 
-any dataset merging considerations 
+Handling missing values is a crucial part of data cleaning because missing data can lead to biased results and inaccurate conclusions. In order to clean the missing values, steps are taken to indentify the variables that contain 'NA' term and impute them as appropriate. In this dataset, we found missing values in the columns of 'Critic_Score', 'User_Score', and 'Rating'. To handle these missing values, we used the na.omit function to remove any rows that contained missing values. This ensures that we are only working with complete data, which will allow us to get accurate and meaningful results.
 
-Briefly reviews literature to account for what other work scholars have done with this dataset and others like it 
+Then, we formatted the data to ensure that it is consistent and easy to work with. In this dataset, we had to convert the 'User_Score' column from character to numeric format using 'as.numeric' function so that we could perform calculations and analyze the data accurately. 
+```{r}
+#Convert from character to numeric format
+data$User_Score <- as.numeric(data$User_Score)
+```
 
-Motivates author’s transformation and analysis of the data in relation to that 
+In addition, we found that the original dataset contained a large number of variables, many of which were not relevant to the research questions we sought to answer. In order to streamline our analysis and focus on the variables that were most important for our investigation, we created a smaller subset of the original dataset that contains only the variables of interest.
+```{r}
+#Five variables we consider important:
+x1 <- c("Name", "Platform", "Year_of_Release", "Genre", "Publisher", "Global_Sales")
+x_imp <- data[x1]
+```
+This smaller subset of the data allowed us to focus our analysis on the variables that were most relevant to our research questions and avoid being overwhelmed by the large number of variables in the original dataset. This also helps us to eliminate irrelevant variables that may add noise to our analysis or make it more difficult to draw meaningful conclusions.
 
-Describes how data were prepared and transformed into a new form in an appropriate level of detail 
+Annotating columns is also important for making the data more interpretable. Upon examining the dataset, we observed that some column names lacked descriptive information, making it difficult for readers to understand the values they contained. To address this, we provided detailed explanations for each column, including how the numbers within them were calculated. This was done to enhance the meaning of the data and enable the audience to better comprehend its contents. As an illustration, we augmented the 'User_Score', 'Critic_Score', and 'Rating' columns to encompass details about the sources of these metrics, specifying the cohorts of individuals that furnish this information.
 
-Picks a subset of variables to focus on, explaining why and how 
+### Dataset Merging
+Since the dataset contains all the necessary information we need to explore the high rate factors and the relationship between sales and different variables, we do not need any additional dataset to enhace the database.
 
-Includes any tools, tests, technique, and exclusion decisions, but not procedurally step-by-step 
+#### Results
+```{r, echo=FALSE}
+# Calculate the mean of the Global_Sales variable
+mean_sales <- mean(data$Global_Sales)
+median_sales <- median(data$Global_Sales)
+# Define a function to calculate the mode
+get_mode <- function(x) {
+  uniqx <- unique(x)
+  uniqx[which.max(tabulate(match(x, uniqx)))]
+}
+# Calculate the mode of the Platform variable
+mode_platform <- get_mode(data$Platform)
+```
 
-Presents variables and key summary findings, including central tendency and any correlation measures 
+After cleaning and formatting the data, we are able to use the data to calculate the central tendency of our variables. The mean and median are commonly used measures of central tendency for numerical variables, while the mode is used for categorical variables.
+### Central Tendency Measures
+```{r}
+# Print the result
+cat("The mean of Global_Sales is:", mean_sales, sep="\n")
+cat("The median of Global_Sales is:", median_sales, sep="\n")
+```
+For the 'Global_Sales' variable, the mean value was found to be 0.69, while the median value was 0.24. This indicates that the distribution of global sales is skewed to the right, as the mean is higher than the median. A right-skewed distribution means that the majority of the values are clustered towards the left side. The result suggests that there are a relatively small number of games that have sold a large number of copies, while the majority of games have sold fewer copies. This can serve as a cautionary signal to investors and content creators, prompting them to reflect on whether their games can truly thrive in a highly competitive market.
 
-Includes selected figures to describe the data’s distribution and notable features 
+```{r}
+cat("The mode of Platform is:", mode_platform, sep="\n")
+```
+The mode  for games platform was found to be PS2, which suggests that this platform was the most commonly used among the developers to release their games. This does not provide much information for the investors or game developers, but it can imply that the period when the gaming industry experienced significant growth and prosperity was around the time when the PS2 console was released. Furthermore, the reason that leads to this result can also be that releasing games on PS2 is more profitable than other platforms. Therefore, further analysis is needed to determine if the popularity of PS2 platform was a result of its superior performance or if there were other factors contributing to its dominance in the market.
 
-Includes a summary table 
+Besides analyzing the central tendency of our variables, we also explored the relationships between them using correlation measures. Correlation measures the strength and direction of the linear relationship between two numerical variables.
+### Correlation Measures
+```{r}
+cor_result <- cor(data$Critic_Score, data$User_Score, use = "pairwise.complete.obs")
+cor_result
+```
+The correlation coefficient between 'Critic_Score' and 'User_Score' is shown to be 0.58, indicating a moderate positive correlation. This means that there is a tendency for the scores assigned by critics to align with the scores assigned by users. This information can be useful for game developers and publishers as they can leverage this correlation to make informed decisions regarding game development and marketing strategies. Additionally, this can also help investors to gauge the potential success of a game by considering the reception from both critics and users.
 
-Looks forward to possibilities for analysis 
+### Plot
+A scatterplot was created to visualize the relationship between Critic Scores and User Scores for the games in our dataset. The scatterplot shows the distribution of Critic Scores and User Scores, with each point representing a game.
+```{r}
+library(ggplot2)
 
-Nice-to-haves 
+# Create a scatter plot
+ggplot(data, aes(x = Critic_Score, y = User_Score)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(x = "Critic Score", y = "User Score") +
+  theme_bw()
+```
+As shown in the scatterplot, there is a moderate positive correlation between Critic Scores and User Scores, as the regression line has a positive slope. However, there is also a wide range of User Scores for any given Critic Score, indicating that the two measures are not identical. It is worth noting that there are some games with low Critic Scores but high User Scores, and vice versa.
 
-Communicates this new form of the data’s applicability and significance 
+#### Discussion
+Admittedly, there are some limitations to our study. Firstly, our dataset only covers games released up to 2016, so we cannot make any conclusions about more recent trends in the gaming industry. Secondly, we only considered a limited number of variables in our analysis, and there may be other variables that are important in predicting a game's success that we did not consider.
 
-Appendices with any data or figures that don’t make the report but authors want to showcase 
+To further explore this topic, future studies could consider factors such as the impact of advertising and marketing on a game's success, the effect of competition from other forms of entertainment, and the role of user reviews and social media in predicting a game's success. Additionally, incorporating more recent data and expanding the number of variables considered could provide a more comprehensive understanding of the gaming industry. Some question topics can be: 1. relationship between games platform and rating 2. Are games that are more recent generally have better rating? 3. relationship between the sales in different area
 
-#### Guidelines
-Your report should accomplish the following:
-- Describe how the data were collected
-- Describe the data, including the source and scope
-- Review the literature that explores what other work scholars have done with this data. 
-- Attend to any ethical considerations related to its collection or use
-- Describe how you cleaned the data
-- Address any dataset merging considerations
-- Describe central tendency and any correlation measures of your data set
-- Include necessary figures (e.g., tables, histograms, maps, charts) describing the distribution of the data
-
+#### Reference
 
