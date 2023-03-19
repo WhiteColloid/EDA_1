@@ -101,4 +101,6 @@ Admittedly, there are some limitations to our study. Firstly, our dataset only c
 To further explore this topic, future studies could consider factors such as the impact of advertising and marketing on a game's success, the effect of competition from other forms of entertainment, and the role of user reviews and social media in predicting a game's success. Additionally, incorporating more recent data and expanding the number of variables considered could provide a more comprehensive understanding of the gaming industry. Some question topics can be: 1. relationship between games platform and rating 2. Are games that are more recent generally have better rating? 3. relationship between the sales in different area
 
 #### Reference
-
+Chodos, A. (n.d.). October 1958: Physicist invents first video game. American Physical Society. Retrieved March 18, 2023, from https://www.aps.org/publications/apsnews/200810/physicshistory.cfm 
+Nickson, C. (2010). How Video Games Became Major Entertainment. Atechnologysociety.co.uk. Retrieved March 18, 2023,from http://www.atechnologysociety.co.uk/how-video-games-became-major-entertainment.html
+VideoGameCons.com. (2018). 2018 Video Game Convention Calendar. VideoGameCons.com. Retrieved March 18, 2023,from https://videogamecons.com/calendar/calendar.php?year=2018
